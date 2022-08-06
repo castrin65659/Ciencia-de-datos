@@ -88,12 +88,24 @@ prop.table(table(datos$Edad,datos$Rotación))*100
 
 ```
 
+```{r}
+boxplot(datos$Edad~datos$Rotación,col="red")
+
+```
+
+
 #Años Experiencia y Rotación
 ```{r}
 table(datos$Años_Experiencia,datos$Rotación)
 prop.table(table(datos$Años_Experiencia,datos$Rotación))*100
 
 ```
+
+```{r}
+boxplot(datos$Años_Experiencia~datos$Rotación,col="red")
+
+```
+
 
 #Distancia_Casa y Rotación
 ```{r}
@@ -102,7 +114,10 @@ prop.table(table(datos$Distancia_Casa,datos$Rotación))*100
 
 ```
 
+```{r}
+boxplot(datos$Distancia_Casa~datos$Rotación,col="red")
 
+```
 
 
 

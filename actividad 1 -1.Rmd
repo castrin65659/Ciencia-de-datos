@@ -72,25 +72,8 @@ ggarrange(g1, g2, g3,labels = c("A", "B", "C"),ncol = 3, nrow = 1)
 ```
 
 
-#Cualitativas:
 
 
-#Graficos de estado civil, horas extra y cargo
-
-De estos gráficos se puede ver que la mayoría de trabajadores son personas casadas, la mayoría no ejecuta horas extras y los cargos con más personas son ejecutivos de ventas, investigadores científicos y técnicos de laboratorio.  
-
-
-```{r}
-
-require(ggplot2)
-require(ggpubr)
-g1=ggplot(datos,aes(x=Estado_Civil))+geom_bar()+theme_bw()
-g2=ggplot(datos,aes(x=Horas_Extra))+geom_bar()+theme_bw()
-g3=ggplot(datos,aes(x=Cargo))+geom_bar()+theme_bw()
-ggarrange(g1, g2, g3,labels = c("A", "B", "C"),ncol = 3, nrow = 1)
-
-
-```
 
 #Punto 3 analisis bivariado
 

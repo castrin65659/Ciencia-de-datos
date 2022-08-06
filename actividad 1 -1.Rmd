@@ -1,0 +1,138 @@
+---
+title: "actividad 1"
+author: "Camilo Castro"
+date: "2022-08-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#Carga de la base de datos
+
+```{r}
+
+library(readxl)
+datos = read_excel("C:/Users/castr/Desktop/base r/Datos_Rotacion.xlsx")
+names(datos)
+
+```
+
+#Punto 1 seleccion de variables 
+
+#Cuantitativas:
+
+Se seleccionan las variables edad y años de experiencia las cuales están ligadas a la juventud de un individuo, consideramos que una de las causas de rotación se da principalmente en las personas más jóvenes quienes tienen menos obligaciones y menor estabilidad en múltiples aspectos, además incluimos la variable distancia la cual puede ser crucial en la permanencia en un empleo. 
+
+
+#Edad
+```{r}
+table(datos$Edad)
+prop.table(table(datos$Edad))*100
+
+```
+#Años Experiencia
+```{r}
+table(datos$Años_Experiencia)
+prop.table(table(datos$Años_Experiencia))*100
+
+```
+#Distancia Casa
+```{r}
+table(datos$Distancia_Casa)
+prop.table(table(datos$Distancia_Casa))*100
+
+```
+
+
+
+
+
+#Punto 2 analisis univariado
+
+#Cuantitativas:
+
+
+#Graficos de edad, años de experiencia y distancia a casa
+
+En los gráficos se puede ver que la mayor concentración de gente se encuentra entre 30 y 40 años, también se puede inferir que esa mayor concentración de gente son personas con menos de 10 años de experiencia, de igual forma se puede apreciar que la mayoría de personas viven a menos de 10 km de la empresa. 
+
+```{r}
+
+require(ggplot2)
+require(ggpubr)
+g1=ggplot(datos,aes(x=Edad))+geom_histogram()+theme_bw()
+g2=ggplot(datos,aes(x=Años_Experiencia))+geom_histogram()+theme_bw()
+g3=ggplot(datos,aes(x=Distancia_Casa))+geom_histogram()+theme_bw()
+ggarrange(g1, g2, g3,labels = c("A", "B", "C"),ncol = 3, nrow = 1)
+
+
+```
+
+
+#Cualitativas:
+
+
+#Graficos de estado civil, horas extra y cargo
+
+De estos gráficos se puede ver que la mayoría de trabajadores son personas casadas, la mayoría no ejecuta horas extras y los cargos con más personas son ejecutivos de ventas, investigadores científicos y técnicos de laboratorio.  
+
+
+```{r}
+
+require(ggplot2)
+require(ggpubr)
+g1=ggplot(datos,aes(x=Estado_Civil))+geom_bar()+theme_bw()
+g2=ggplot(datos,aes(x=Horas_Extra))+geom_bar()+theme_bw()
+g3=ggplot(datos,aes(x=Cargo))+geom_bar()+theme_bw()
+ggarrange(g1, g2, g3,labels = c("A", "B", "C"),ncol = 3, nrow = 1)
+
+
+```
+
+#Punto 3 analisis bivariado
+
+#Cuantitativas
+
+De acuerdo a los resultados se puede apreciar que el rango de edades entre 26 y 35 años es donde se presenta mayor rotación, también podemos ver que hay un nivel de rotación muy alto en personas con al menos 1 año de experiencia, esto respalda la hipótesis de que son las personas jóvenes con menos experiencia las que más rotan, por último la variable de distancia de la vivienda nos muestra que vivir lejos no es motivo para que se presente mayor rotación.  
+
+#Edad y Rotación
+```{r}
+table(datos$Edad,datos$Rotación)
+prop.table(table(datos$Edad,datos$Rotación))*100
+
+```
+
+#Años Experiencia y Rotación
+```{r}
+table(datos$Años_Experiencia,datos$Rotación)
+prop.table(table(datos$Años_Experiencia,datos$Rotación))*100
+
+```
+
+#Distancia_Casa y Rotación
+```{r}
+table(datos$Distancia_Casa,datos$Rotación)
+prop.table(table(datos$Distancia_Casa,datos$Rotación))*100
+
+```
+
+
+
+
+
+#Punto 4 Conclusiones
+
+-	Podemos afirmar que las personas jóvenes con poca experiencia laboral generarán mayor rotación, se recomienda contratar a personas con más de 11 años de experiencia.
+
+-	Se recomienda no prestar atención a la variable distancia de la vivienda ya que no resulta ser trascendental en la rotación.
+
+     
+
+
+
+
+
+

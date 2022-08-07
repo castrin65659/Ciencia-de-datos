@@ -72,25 +72,8 @@ ggarrange(g1, g2, g3,labels = c("A", "B", "C"),ncol = 3, nrow = 1)
 ```
 
 
-#Cualitativas:
 
 
-#Graficos de estado civil, horas extra y cargo
-
-De estos gráficos se puede ver que la mayoría de trabajadores son personas casadas, la mayoría no ejecuta horas extras y los cargos con más personas son ejecutivos de ventas, investigadores científicos y técnicos de laboratorio.  
-
-
-```{r}
-
-require(ggplot2)
-require(ggpubr)
-g1=ggplot(datos,aes(x=Estado_Civil))+geom_bar()+theme_bw()
-g2=ggplot(datos,aes(x=Horas_Extra))+geom_bar()+theme_bw()
-g3=ggplot(datos,aes(x=Cargo))+geom_bar()+theme_bw()
-ggarrange(g1, g2, g3,labels = c("A", "B", "C"),ncol = 3, nrow = 1)
-
-
-```
 
 #Punto 3 analisis bivariado
 
@@ -105,12 +88,24 @@ prop.table(table(datos$Edad,datos$Rotación))*100
 
 ```
 
+```{r}
+boxplot(datos$Edad~datos$Rotación,col="red")
+
+```
+
+
 #Años Experiencia y Rotación
 ```{r}
 table(datos$Años_Experiencia,datos$Rotación)
 prop.table(table(datos$Años_Experiencia,datos$Rotación))*100
 
 ```
+
+```{r}
+boxplot(datos$Años_Experiencia~datos$Rotación,col="red")
+
+```
+
 
 #Distancia_Casa y Rotación
 ```{r}
@@ -119,7 +114,10 @@ prop.table(table(datos$Distancia_Casa,datos$Rotación))*100
 
 ```
 
+```{r}
+boxplot(datos$Distancia_Casa~datos$Rotación,col="red")
 
+```
 
 
 

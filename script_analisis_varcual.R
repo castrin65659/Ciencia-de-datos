@@ -157,3 +157,61 @@ ggarrange(bart_cargo,Cargo_freq.t,ncol=2,nrow=1,
           heights = c(0.9,0.3))
 
 
+## Grid of barcharts 
+
+ggarrange(bart_rot,bart_horasext,bart_satisfamb,bart_cargo,ncol=2,nrow=2)
+
+
+
+# ----------------------------------Análisis bivariado---------------------------------------
+#--------------------------Rotación vs Variables cualitativas--------------------------------
+
+## Agrupaciones 
+
+
+agrup1_herot<- datos_grupo %>% 
+    group_by(Horas_Extra,Rotación) %>%
+    summarise(FrecAbs=n()) %>% 
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs)) %>%
+    arrange(desc(FrecAbs))
+    
+    
+agrup2_satisfamb<- datos_grupo %>% 
+    group_by(Satisfacción_Ambiental,Rotación) %>%
+    summarise(FrecAbs=n()) %>% 
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs)) %>%
+    arrange(desc(FrecAbs))
+
+agrup3_cargo<- datos_grupo %>% 
+    group_by(Cargo,Rotación) %>% 
+    summarise(FrecAbs=n()) %>% 
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs)) %>%
+    arrange(desc(FrecAbs))
+
+
+
+## Rotación vs horas extras
+
+barplot_rothe<-ggplot(agrup1_herot,aes(fill=Rotación,y=FrecAbs,x=Horas_Extra))+
+    geom_bar(position="stack",stat="identity")
+
+barplot_rothe_rel<-ggplot(agrup1_herot,aes(fill=Rotación,y=FrecAbs,x=Horas_Extra))+
+    geom_bar(position="fill",stat="identity")
+
+## Rotación vs Satisfacción Ambiental
+
+barplot_rotsatisf<- ggplot(agrup2_satisfamb,aes(fill=Rotación,y=FrecAbs,x=Satisfacción_Ambiental))+
+    geom_bar(position="stack",stat="identity")
+
+barplot_rotsatisf_rel<- ggplot(agrup2_satisfamb,aes(fill=Rotación,y=FrecAbs,x=Satisfacción_Ambiental))+
+    geom_bar(position="fill",stat="identity")
+
+
+## Rotación vs Cargo
+
+barplot_rotcargo<- ggplot(agrup3_cargo,aes(fill=Rotación,y=FrecAbs,x=Cargo))+
+    geom_bar(position="stack",stat="identity") +coord_flip()
+
+barplot_rotcargo_rel<- ggplot(agrup3_cargo,aes(fill=Rotación,y=FrecAbs,x=Cargo))+
+    geom_bar(position="fill",stat="identity") +coord_flip()
+

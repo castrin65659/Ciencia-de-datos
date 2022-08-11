@@ -127,6 +127,9 @@ boxplot(datos$Distancia_Casa~datos$Rotación,col="red")
 
 -	Se recomienda no prestar atención a la variable distancia de la vivienda ya que no resulta ser trascendental en la rotación.
 
+
+-	Mediante un análisis bivariado es posible cruzar variables que aparecen relacionadas dentro de la misma muestra, de esta forma se encuentran respuestas a hipótesis planteadas inicialmente.
+
      
 
 

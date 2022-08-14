@@ -1,81 +1,163 @@
 ---
-title: "actividad 1"
-author: "Camilo Castro"
+title: "Actividad 1-Análisis exploratorio rotación de personal"
+author: "Camilo Castro - David Alejandro Rivera Correa"
 date: "2022-08-02"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
+## Introducción
+
+El siguiente documento tiene como finalidad desarrollar un ejercicio básico de análisis exploratorio de datos abordando la tematica de rotación de personal en una organización, tomando como base el dataset "rotación.xlsx" que contiene información de los trabajadores que han rotado (han realizado un retiro voluntario de la compañia) y de aquellos que aun se mantienen en la organización.
+
+Para la ejecución de este ejercicio se plantearán hipotesis iniciales respecto a las razones que podrian generar la rotación que involucren o relacionen tres variables cuantitivas y tres variables cualitativas del set de datos. A partir de esto se llevará a cabo un análisis descriptivo univariado y bivariado que permita identificar algunos patrones que permitan generar conclusiones iniciales respecto las hipotesis planteadas y estrategias potenciales respecto a los hallazgos preliminares. 
+
+
+## Preparación del entorno
+
+### Carga e instalación de paquetes 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+
+library(readxl)#paquetes para lectura de Excel
+library(tidyverse) #Conjunto de paquetes diseñados para ciencia de datos
+library(ggplot2) # paquete de visualización
+library(ggpubr)#paquete para aumentar personalización de ggplot
+library(cdparcoord)#paquete para generación de diagrma de categorias paralelas
 
 
-#Carga de la base de datos
+```
+
+
+### Carga de la base de datos
 
 ```{r}
 
 library(readxl)
-datos = read_excel("C:/Users/castr/Desktop/base r/Datos_Rotacion.xlsx")
-names(datos)
+datos=read_excel("Datos_Rotacion.xlsx")
+glimpse(datos)
 
 ```
-
-#Punto 1 seleccion de variables 
-
-#Cuantitativas:
-
-Se seleccionan las variables edad y años de experiencia las cuales están ligadas a la juventud de un individuo, consideramos que una de las causas de rotación se da principalmente en las personas más jóvenes quienes tienen menos obligaciones y menor estabilidad en múltiples aspectos, además incluimos la variable distancia la cual puede ser crucial en la permanencia en un empleo. 
+El set de datos cuenta con un total de 24 columnas y 1470 registros, en la sección siguiente se seleccionaran 3 variables cualitativas y cuantitativas para llevar a cabo el análisis. 
 
 
-#Edad
+## 1.seleccion de variables 
+
+La decisión de retiro voluntario de una empresa por parte de un trabajador esta ligada a una decisión relacionada a los incentivos para quedarse en su empresa y no decidir tomar un trabajo en otra o optar por actividades alternativas. Parte de los incentivos y desincentivos de permanecer tambien se asocian a costos de oportunidad ligadas a condiciones propias del trabajador, por ejemplo un empleado joven que ya ha superado la barrera de adquirir experiencia laboral eventualmente tendrá menor aversión al riesgo de cambiar de empresa en especial si en el contexto del mercado laboral en el cual se desenvuelve las empresas tienen preferencia por trabajadores jovenes y las condiciones laborales no satisfacen su aspiración, paralelamente una persona de mayor edad y con poca experiencia y baja cualificación tendra menos incentivos de cambiar dado que su tiempo cesante podria ser amplio y esto representa un alto impacto en su calidad de vida por lo tanto aunque las condiciones no fueran las mejoras se esperaria un menor nivel de rotación en este grupo.
+
+En concordancia a lo anterior y teniendo en cuenta el set de datos principal se esperaria que una edad menor, una experiencia media y distancias mayores del lugar de trabajo se relacionen a mayor rotación en especial si el individuo esta en puestos operativos y no esta satisfecho con el clima organizacional y tiene carga laboral extra.  
+
+Considerando lo anterior se seleccionan las siguientes variables:
+
+Variable de estudio:
+Rotación
+
+Cuantitativas: 
+
+Edad
+Distancia_Casa
+Años_Experiencia
+
+
+Cualitativas:
+
+Satisfacción_Ambiental
+Cargo
+Horas_Extra
+
+Para dar inicio al análisis se genera un set de datos depurado con las variables a analizar:
+
 ```{r}
-table(datos$Edad)
-prop.table(table(datos$Edad))*100
+
+#Inicialmente se transforma Satisfacción Ambiental a Factor dado que es una variable
+# cualitativa ordinal que mide nivel de satisfaccion
+
+datos$Satisfacción_Ambiental<- as.factor(datos$Satisfacción_Ambiental) 
+
+
+# Se genera un set de datos unicamente con las variables a analizar y se le asigna el nombre 
+# datos_grupo
+
+datos_grupo<- datos %>% 
+    select(Rotación,Edad,Distancia_Casa,Años_Experiencia,Satisfacción_Ambiental,Cargo,Horas_Extra)
+
+glimpse(datos_grupo)
+
 
 ```
-#Años Experiencia
+
+### 2.1 Análisis Univariado de variables cuantitativas:
+
+Se seleccionan las variables edad y años de experiencia las cuales están ligadas a la juventud de un individuo, consideramos que una de las causas de rotación se da principalmente en las personas más jóvenes quienes tienen menos obligaciones y menor estabilidad en múltiples aspectos, además incluimos la variable distancia la cual puede ser crucial en la permanencia en un empleo dado que representa un costo implicito de laboral (se esperaria que una distancia mayor del lugar de trabajo represente mayores costos de transporte para el trabajador).
+
+Como primer ejercicio se revisan los estadisticos basicos de las variables cuantitativas:
+
 ```{r}
-table(datos$Años_Experiencia)
-prop.table(table(datos$Años_Experiencia))*100
+
+summary <- datos_grupo %>% 
+    select(Edad,Distancia_Casa,Años_Experiencia) %>%
+    summary(datos_grupo)
+
+summary
 
 ```
-#Distancia Casa
-```{r}
-table(datos$Distancia_Casa)
-prop.table(table(datos$Distancia_Casa))*100
+A partir de estos estadisticos básicos es posible observar que la edad promedio de los trabajadores es 36.92 años mostrando de esta forma una cercania a la mediana la cual es de 36 la cual nos comunica que el 50% de los trabajadores tiene como máximo 36 años, asi mismo se muestra que la edad máxima entre los mismos es de 60 años.  
+
+Por otro la distancia respecto a lugar de trabajo evidencia que el 50% de los trabajadores vive como máximo a 7 kilometros del lugar de trabajo mientras que el 50% vive en zonas con distancias superiores, para el caso de esta variable la media es mayor a la mediana lo cual indica que la distribución de distancias presenta un sesgo a la derecha lo cual indica que la cola derecha de esta distribución es pesada y por lo tanto el 50% restante de los trabajadores tiene una dispersión importante respecto a las distancias del trabajo. 
+
+Finalmente los estadisticos basicos de los años de experiencia muestran que el 25% de los trabajores tienen como máximo 6 años de experiencia y que el 50% tienen como máximo 10 años de experiencia mientras que el 50% restante presenta experiencias superiores a los 10 años, es de resaltar que la empresa en sus extremos desde lo minimo tambien cuenta con trabajadores sin experiencia y en su vertiente máxima cuenta con trabajadores que tienen hasta 40 años de experiencia laboral.  
+
+Para ver con más claridad las distribuciones que comunican los estadisticos, a continuación se muestra un histograma y un diagrama de caja para cada variable: 
+
+```{r echo=FALSE}
+
+require(ggplot2)
+require(ggpubr)
+g1=ggplot(datos,aes(x=Edad))+geom_histogram()+theme_bw()
+g1_1=ggplot(datos,aes(x=Edad))+geom_boxplot()+theme_bw()
+g2=ggplot(datos,aes(x=Años_Experiencia))+geom_histogram()+theme_bw()
+g2_2=ggplot(datos,aes(x=Años_Experiencia))+geom_boxplot()+theme_bw()
+g3=ggplot(datos,aes(x=Distancia_Casa))+geom_histogram()+theme_bw()
+g3_3=ggplot(datos,aes(x=Distancia_Casa))+geom_boxplot()+theme_bw()
+ggarrange(g1,g1_1, g2,g2_2,g3,g3_3,ncol = 2, nrow = 3)
+
 
 ```
 
+Los estadisticos básicos de las variables y las distribuciones mostradas gráficamente permiten evidenciar los siguientes rasgos generales del grupo de trabajadores analizado: 
+
+- En promedio la empresa no maneja una población de trabajadores muy joven, el promedio y la mediana rondan los 36 años que dan muestra de un perfil mucho más adulto.
+
+- La experiencia del primer cuartil y de la mediana evidencian que la proporcion de trabajadores con poca experiencia (menor a 3 años) no es dominante y que porlo menos el 75% de los trabajadores tienen más de 6 años de experiencia.  
+
+-  lo que respecta a distancia del lugar de trabajo por lo menos un 50% vive a 7 o menos kilometros del lugar de trabajo, el 50% restante cuenta con una variedad relevante de distancias.
+
+
+### 2.2 Análisis bivariado de variables cuantitativas
 
 
 
 
-#Punto 2 analisis univariado
 
-#Cuantitativas:
+
+
+
+### 2.1 Análisis Univarido
+
 
 
 #Graficos de edad, años de experiencia y distancia a casa
 
 En los gráficos se puede ver que la mayor concentración de gente se encuentra entre 30 y 40 años, también se puede inferir que esa mayor concentración de gente son personas con menos de 10 años de experiencia, de igual forma se puede apreciar que la mayoría de personas viven a menos de 10 km de la empresa. 
 
-```{r}
-
-require(ggplot2)
-require(ggpubr)
-g1=ggplot(datos,aes(x=Edad))+geom_histogram()+theme_bw()
-g2=ggplot(datos,aes(x=Años_Experiencia))+geom_histogram()+theme_bw()
-g3=ggplot(datos,aes(x=Distancia_Casa))+geom_histogram()+theme_bw()
-ggarrange(g1, g2, g3,labels = c("A", "B", "C"),ncol = 3, nrow = 1)
-
-
-```
 
 
 
 
 
-#Punto 3 analisis bivariado
 
 #Cuantitativas
 
@@ -120,8 +202,94 @@ boxplot(datos$Distancia_Casa~datos$Rotación,col="red")
 ```
 
 
+## 3. Analisis variables cualitativas
+
+### 3.1 Análisis Univarido
+
+```{r}
+rotacion_freq<-datos_grupo %>%
+    group_by(Rotación) %>%
+    summarise(FrecAbs=n())
+rotacion_freq<-rotacion_freq %>%
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs))
+
+rotacion_freq.t<- ggtexttable(rotacion_freq,rows=NULL,
+                              theme = ttheme("mOrange"))
+
+
+# Tabla de frecuencia variable Horas_Extra
+horasext_freq<-datos_grupo %>%
+    group_by(Horas_Extra) %>%
+    summarise(FrecAbs=n())
+horasext_freq<-horasext_freq %>%
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs))
+
+# Tabla de frecuencias formateada
+
+horasext_freq.t<- ggtexttable(horasext_freq,rows=NULL,
+                              theme = ttheme("mOrange"))
+
+
+# Tabla de frecuencia variable Satisfacción_Ambiental
+satisfamb_freq<-datos_grupo %>%
+    group_by(Satisfacción_Ambiental) %>%
+    summarise(FrecAbs=n())
+satisfamb_freq<-satisfamb_freq %>%
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs))
+
+# Tabla de frecuencias formateada
+
+satisfamb_freq.t<- ggtexttable(satisfamb_freq,rows=NULL,
+                              theme = ttheme("mOrange"))
+
+
+
+# Tabla de frecuencia variable Cargo
+Cargo_freq<-datos_grupo %>%
+    group_by(Cargo) %>%
+    summarise(FrecAbs=n())
+Cargo_freq<-Cargo_freq %>%
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs))
+Cargo_freq<-Cargo_freq %>%
+    arrange(desc(FrecAbs))
+
+
+# Tabla de frecuencias formateada
+
+Cargo_freq.t<- ggtexttable(Cargo_freq,rows=NULL,
+                               theme = ttheme("mOrange"))
+
+
+ggarrange(rotacion_freq.t,horasext_freq.t,satisfamb_freq.t,Cargo_freq.t,ncol=2,nrow=2)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+### 3.2 Análisis bivarido
+
+
+
+
+
+
+
+
+
+
 
 #Punto 4 Conclusiones
+
+
+
 
 -	Podemos afirmar que las personas jóvenes con poca experiencia laboral generarán mayor rotación, se recomienda contratar a personas con más de 11 años de experiencia.
 

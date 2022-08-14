@@ -295,6 +295,9 @@ ggarrange(rotacion_freq.t,horasext_freq.t,satisfamb_freq.t,Cargo_freq.t,ncol=2,n
 
 -	Se recomienda no prestar atención a la variable distancia de la vivienda ya que no resulta ser trascendental en la rotación.
 
+
+-	Mediante un análisis bivariado es posible cruzar variables que aparecen relacionadas dentro de la misma muestra, de esta forma se encuentran respuestas a hipótesis planteadas inicialmente.
+
      
 
 

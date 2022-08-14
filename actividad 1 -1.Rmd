@@ -260,15 +260,62 @@ Cargo_freq.t<- ggtexttable(Cargo_freq,rows=NULL,
                                theme = ttheme("mOrange"))
 
 
-ggarrange(rotacion_freq.t,horasext_freq.t,satisfamb_freq.t,Cargo_freq.t,ncol=2,nrow=2)
+ggarrange(rotacion_freq.t,horasext_freq.t,satisfamb_freq.t,ncol=1,nrow=3,align = "hv")
 
 
 ```
 
 
 
+```{r}
+
+ggarrange(Cargo_freq.t,ncol=1,nrow=1)
+
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+bart_rot<- ggplot(data=datos_grupo,aes(as.factor(datos_grupo$Rotación)))+
+    geom_bar(color="black",fill="orange",alpha=0.7)+
+    ggtitle("Distribución de rotación")+
+    theme(
+        plot.title=element_text(family =" ",face="bold",colour="black",size=13,
+                                hjust=0.5,vjust=0.5)
+    )+xlab("Rotación")+ylab("Conteo")
 
 
+bart_horasext<- ggplot(data=datos_grupo,aes(as.factor(datos_grupo$Horas_Extra)))+
+    geom_bar(color="black",fill="orange",alpha=0.7)+
+    ggtitle("Distribución de funcionarios con horas extra")+
+    theme(
+        plot.title=element_text(family =" ",face="bold",colour="black",size=13,
+                                hjust=0.5,vjust=0.5)
+    )+xlab("¿Labora horas extra?")+ylab("Conteo")
+
+
+bart_satisfamb<- ggplot(data=datos_grupo,aes(as.factor(datos_grupo$Satisfacción_Ambiental)))+
+    geom_bar(color="black",fill="orange",alpha=0.7)+
+    ggtitle("Distribución nivel de satisfacción ambiente laboral")+
+    theme(
+        plot.title=element_text(family =" ",face="bold",colour="black",size=13,
+                                hjust=0.5,vjust=0.5)
+    )+xlab("¿Qué tan satisfecho esta con el ambiente laboral?")+ylab("Conteo")
+
+
+bart_cargo<- ggplot(data=Cargo_freq,aes(x=Cargo,y=FrecAbs))+
+    geom_bar(stat="identity",color="black",fill="orange",alpha=0.7)+
+    ggtitle("Distribución de cargos")+
+    theme(
+        plot.title=element_text(family =" ",face="bold",colour="black",size=13,
+                                hjust=0.5,vjust=0.5)
+    )+xlab("Cargos")+ylab("Conteo")+coord_flip()
+
+
+ggarrange(bart_rot,bart_horasext,bart_satisfamb,bart_cargo,ncol=2,nrow=2)
+
+
+
+
+```
 
 
 

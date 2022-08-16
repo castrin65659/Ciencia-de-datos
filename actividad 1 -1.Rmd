@@ -27,6 +27,7 @@ library(tidyverse) #Conjunto de paquetes diseñados para ciencia de datos
 library(ggplot2) # paquete de visualización
 library(ggpubr)#paquete para aumentar personalización de ggplot
 library(cdparcoord)#paquete para generación de diagrma de categorias paralelas
+library(GGally)
 
 
 ```
@@ -93,7 +94,7 @@ glimpse(datos_grupo)
 
 Se seleccionan las variables edad y años de experiencia las cuales están ligadas a la juventud de un individuo, consideramos que una de las causas de rotación se da principalmente en las personas más jóvenes quienes tienen menos obligaciones y menor estabilidad en múltiples aspectos, además incluimos la variable distancia la cual puede ser crucial en la permanencia en un empleo dado que representa un costo implicito de laboral (se esperaria que una distancia mayor del lugar de trabajo represente mayores costos de transporte para el trabajador).
 
-Como primer ejercicio se revisan los estadisticos basicos de las variables cuantitativas:
+Como primer ejercicio se revisan los estadísticos basicos de las variables cuantitativas:
 
 ```{r}
 
@@ -138,75 +139,97 @@ Los estadisticos básicos de las variables y las distribuciones mostradas gráfi
 
 ### 2.2 Análisis bivariado de variables cuantitativas
 
+Para el abordaje de este analisis se tomarán en consideración los estadísticos basicos relacionados para los casos en los que se presenta y no se presenta rotación y a partir de esto se generarán los respectivos histogramas y diagramas de caja relacionados a cada grupo con el fin de conocer como están distribuidos y apreciar si existen diferencias en sus medidas de tendencia central que permitan caracterizar de forma más precisa a los individuos que rotan.  
 
-
-
-
-
-
-
-### 2.1 Análisis Univarido
-
-
-
-#Graficos de edad, años de experiencia y distancia a casa
-
-En los gráficos se puede ver que la mayor concentración de gente se encuentra entre 30 y 40 años, también se puede inferir que esa mayor concentración de gente son personas con menos de 10 años de experiencia, de igual forma se puede apreciar que la mayoría de personas viven a menos de 10 km de la empresa. 
-
-
-
-
-
-
-
-#Cuantitativas
-
-De acuerdo a los resultados se puede apreciar que el rango de edades entre 26 y 35 años es donde se presenta mayor rotación, también podemos ver que hay un nivel de rotación muy alto en personas con al menos 1 año de experiencia, esto respalda la hipótesis de que son las personas jóvenes con menos experiencia las que más rotan, por último la variable de distancia de la vivienda nos muestra que vivir lejos no es motivo para que se presente mayor rotación.  
-
-#Edad y Rotación
+ 
+#### Edad vs  Rotación
 ```{r}
-table(datos$Edad,datos$Rotación)
-prop.table(table(datos$Edad,datos$Rotación))*100
+summary_1<- datos_grupo %>%
+    select(Rotación,Edad) %>%
+    group_by(Rotación) %>% 
+    summarize(min = min(Edad),
+            q1 = quantile(Edad, 0.25),
+            median = median(Edad),
+            mean = mean(Edad),
+            q3 = quantile(Edad, 0.75),
+            max = max(Edad))
+
+summary_1
 
 ```
 
-```{r}
-boxplot(datos$Edad~datos$Rotación,col="red")
-
+```{r message=FALSE, warning=FALSE}
+boxplot(datos_grupo$Edad~datos_grupo$Rotación,col="red")
+ggplot(datos_grupo,aes(x=Edad))+geom_histogram()+facet_grid(~Rotación)+theme_bw()
 ```
 
 
-#Años Experiencia y Rotación
+
+#### Años Experiencia vs Rotación
 ```{r}
-table(datos$Años_Experiencia,datos$Rotación)
-prop.table(table(datos$Años_Experiencia,datos$Rotación))*100
+summary_2<- datos_grupo %>%
+    select(Rotación,Años_Experiencia) %>%
+    group_by(Rotación) %>% 
+    summarize(min = min(Años_Experiencia),
+            q1 = quantile(Años_Experiencia, 0.25),
+            median = median(Años_Experiencia),
+            mean = mean(Años_Experiencia),
+            q3 = quantile(Años_Experiencia, 0.75),
+            max = max(Años_Experiencia))
+
+summary_2
 
 ```
 
 ```{r}
 boxplot(datos$Años_Experiencia~datos$Rotación,col="red")
+ggplot(datos_grupo,aes(x=Años_Experiencia))+geom_histogram()+facet_grid(~Rotación)+theme_bw()
 
 ```
 
 
-#Distancia_Casa y Rotación
-```{r}
-table(datos$Distancia_Casa,datos$Rotación)
-prop.table(table(datos$Distancia_Casa,datos$Rotación))*100
-
-```
+#### Distancia_Casa vs Rotación
 
 ```{r}
-boxplot(datos$Distancia_Casa~datos$Rotación,col="red")
+summary_3<- datos_grupo %>%
+    select(Rotación,Distancia_Casa) %>%
+    group_by(Rotación) %>% 
+    summarize(min = min(Distancia_Casa),
+            q1 = quantile(Distancia_Casa, 0.25),
+            median = median(Distancia_Casa),
+            mean = mean(Distancia_Casa),
+            q3 = quantile(Distancia_Casa, 0.75),
+            max = max(Distancia_Casa))
+
+summary_3
 
 ```
+
+```{r}
+
+bx_distcasrot<-boxplot(datos$Distancia_Casa~datos$Rotación,col="red")
+
+ggplot(datos_grupo,aes(x=Distancia_Casa))+geom_histogram()+facet_grid(~Rotación)+theme_bw()
+           
+
+
+
+```
+
+
+De acuerdo a los resultados se puede apreciar que el rango de edades entre 26 y 35 años es donde se presenta mayor rotación, también podemos ver que hay un nivel de rotación muy alto en personas con al menos 1 año de experiencia, esto respalda la hipótesis de que son las personas jóvenes con menos experiencia las que más rotan, por último la variable de distancia de la vivienda nos muestra que vivir lejos no es motivo para que se presente mayor rotación. 
+
+
+
+
+
 
 
 ## 3. Analisis variables cualitativas
 
 ### 3.1 Análisis Univarido
 
-```{r}
+```{r include=FALSE}
 rotacion_freq<-datos_grupo %>%
     group_by(Rotación) %>%
     summarise(FrecAbs=n())
@@ -318,11 +341,88 @@ ggarrange(bart_rot,bart_horasext,bart_satisfamb,bart_cargo,ncol=2,nrow=2)
 ```
 
 
-
-
-
 ### 3.2 Análisis bivarido
 
+```{r include=FALSE}
+
+agrup1_herot<- datos_grupo %>% 
+    group_by(Horas_Extra,Rotación) %>%
+    summarise(FrecAbs=n()) %>% 
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs)) %>%
+    arrange(desc(FrecAbs))
+    
+    
+agrup2_satisfamb<- datos_grupo %>% 
+    group_by(Satisfacción_Ambiental,Rotación) %>%
+    summarise(FrecAbs=n()) %>% 
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs)) %>%
+    arrange(desc(FrecAbs))
+
+agrup3_cargo<- datos_grupo %>% 
+    group_by(Cargo,Rotación) %>% 
+    summarise(FrecAbs=n()) %>% 
+    mutate(FrecRelativa=FrecAbs/sum(FrecAbs)) %>%
+    arrange(desc(FrecAbs))
+
+
+## Rotación vs horas extras
+
+barplot_rothe<-ggplot(agrup1_herot,aes(fill=Rotación,y=FrecAbs,x=Horas_Extra))+
+    geom_bar(position="stack",stat="identity")
+
+barplot_rothe_rel<-ggplot(agrup1_herot,aes(fill=Rotación,y=FrecAbs,x=Horas_Extra))+
+    geom_bar(position="fill",stat="identity")
+
+## Rotación vs Satisfacción Ambiental
+
+barplot_rotsatisf<- ggplot(agrup2_satisfamb,aes(fill=Rotación,y=FrecAbs,x=Satisfacción_Ambiental))+
+    geom_bar(position="stack",stat="identity")
+
+barplot_rotsatisf_rel<- ggplot(agrup2_satisfamb,aes(fill=Rotación,y=FrecAbs,x=Satisfacción_Ambiental))+
+    geom_bar(position="fill",stat="identity")
+
+
+## Rotación vs Cargo
+
+barplot_rotcargo<- ggplot(agrup3_cargo,aes(fill=Rotación,y=FrecAbs,x=Cargo))+
+    geom_bar(position="stack",stat="identity") +coord_flip()
+
+barplot_rotcargo_rel<- ggplot(agrup3_cargo,aes(fill=Rotación,y=FrecAbs,x=Cargo))+
+    geom_bar(position="fill",stat="identity") +coord_flip()
+
+
+
+```
+
+
+
+
+```{r}
+
+ggarrange(barplot_rothe,barplot_rothe_rel,ncol=2,nrow=1)
+
+```
+
+
+
+
+
+```{r}
+
+ggarrange(barplot_rotsatisf,barplot_rotsatisf_rel,ncol=2,nrow=1)
+
+```
+
+
+
+
+
+
+```{r}
+
+ggarrange(barplot_rotcargo,barplot_rotcargo_rel,ncol=2,nrow=1)
+
+```
 
 
 
@@ -330,13 +430,7 @@ ggarrange(bart_rot,bart_horasext,bart_satisfamb,bart_cargo,ncol=2,nrow=2)
 
 
 
-
-
-
-#Punto 4 Conclusiones
-
-
-
+## 4.Conclusiones
 
 -	Podemos afirmar que las personas jóvenes con poca experiencia laboral generarán mayor rotación, se recomienda contratar a personas con más de 11 años de experiencia.
 

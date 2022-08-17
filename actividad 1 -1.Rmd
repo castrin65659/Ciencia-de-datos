@@ -27,7 +27,7 @@ library(tidyverse) #Conjunto de paquetes diseñados para ciencia de datos
 library(ggplot2) # paquete de visualización
 library(ggpubr)#paquete para aumentar personalización de ggplot
 library(cdparcoord)#paquete para generación de diagrma de categorias paralelas
-library(GGally)
+
 
 
 ```
@@ -47,7 +47,7 @@ El set de datos cuenta con un total de 24 columnas y 1470 registros, en la secci
 
 ## 1.seleccion de variables 
 
-La decisión de retiro voluntario de una empresa por parte de un trabajador esta ligada a una decisión relacionada a los incentivos para quedarse en su empresa y no decidir tomar un trabajo en otra o optar por actividades alternativas. Parte de los incentivos y desincentivos de permanecer tambien se asocian a costos de oportunidad ligadas a condiciones propias del trabajador, por ejemplo un empleado joven que ya ha superado la barrera de adquirir experiencia laboral eventualmente tendrá menor aversión al riesgo de cambiar de empresa en especial si en el contexto del mercado laboral en el cual se desenvuelve las empresas tienen preferencia por trabajadores jovenes y las condiciones laborales no satisfacen su aspiración, paralelamente una persona de mayor edad y con poca experiencia y baja cualificación tendra menos incentivos de cambiar dado que su tiempo cesante podria ser amplio y esto representa un alto impacto en su calidad de vida por lo tanto aunque las condiciones no fueran las mejoras se esperaria un menor nivel de rotación en este grupo.
+La decisión de retiro voluntario de una empresa por parte de un trabajador esta ligada a una decisión relacionada a los incentivos para quedarse en su empresa y no decidir tomar un trabajo en otra o optar por actividades alternativas. Parte de los incentivos y desincentivos de permanecer tambien se asocian a costos de oportunidad ligadas a condiciones propias del trabajador, por ejemplo un empleado joven que ya ha superado la barrera de adquirir experiencia laboral eventualmente tendrá menor aversión al riesgo de cambiar de empresa en especial si en el contexto del mercado laboral en el cual se desenvuelve las empresas tienen preferencia por trabajadores jovenes y las condiciones laborales no satisfacen su aspiración, paralelamente una persona de mayor edad y con poca experiencia y baja cualificación tendra menos incentivos de cambiar dado que su tiempo cesante podria ser amplio y esto representa un alto impacto en su calidad de vida por lo tanto aunque las condiciones no fueran las mejores se esperaria un menor nivel de rotación en este grupo.
 
 En concordancia a lo anterior y teniendo en cuenta el set de datos principal se esperaria que una edad menor, una experiencia media y distancias mayores del lugar de trabajo se relacionen a mayor rotación en especial si el individuo esta en puestos operativos y no esta satisfecho con el clima organizacional y tiene carga laboral extra.  
 
@@ -162,7 +162,9 @@ summary_1
 boxplot(datos_grupo$Edad~datos_grupo$Rotación,col="red")
 ggplot(datos_grupo,aes(x=Edad))+geom_histogram()+facet_grid(~Rotación)+theme_bw()
 ```
+
 La revisión de la rotación respecto a la edad permite apreciar que las personas que rotan tienen en promedio una edad menor que las personas que no lo hacen, la revisión de los diagramas de caja y de los histrogramas permite apreciar que el 50% de los individuos que rotan tienen como máximo 32 años, es decir, 4 años menos que la mediana de aquellos que no lo hacen,  esta realidad demarca por supuesto tambien una distancia en los promedio que presentan aproximadamente 4 años de diferencia. Esta comparación entre categorias de la variable cuantitativa permite apreciar que si se presentan diferencias de edad entre los individuos que deciden rotar y quienes no lo hacen, en general se esperaria que los menores de 36 años presenten una mayor propensión a rotar.  
+
 
 
 #### Años Experiencia vs Rotación
@@ -187,7 +189,26 @@ ggplot(datos_grupo,aes(x=Años_Experiencia))+geom_histogram()+facet_grid(~Rotaci
 
 ```
 
+
 Para el caso del contraste entre los años de experiencia y la rotación es posible notar una diferencia mucho más notable en las distribuciones que se evidencia claramente en el diagrama de caja y en los histogramas y que se aclara mucho más con los estadísticos básicos que muestran que el percentil 75 es de 10 años, por lo tanto el 75% de los individuos que rotan tienen como máximo 10 años de experiencia lo cual es coherente con la distribución del histograma de aquellos que rotan en donde se observa con claridad que la mayor concentración se encuentran entre 0 y 10 años de experiencia, el 25% restante de la distribución corresponde a individuos con más de 10 años de experiencia que rotan (caso menos frecuente).El análisis de este par de variables permite dilucidar que los individuos con 10 o menos años de experiencia tienen más propensión a rotar que aquellos que tienen una experiencia superior.  
+
+
+Dada esta señal genera cierto interes proponer un diagrama de dispersión que relacione la edad y los años de experiencia y muestra las categorias de rotación en colores diferentes: 
+
+
+```{r}
+
+ggplot(datos_grupo,aes(x=Edad,y=Años_Experiencia,color=Rotación))+
+    geom_point(alpha=0.3,size=3)+
+    labs(y="Años de experiencia",x="Edad")
+
+```
+
+
+El gráfico de dispersión permit apreciar que hay una aglomeración relevante de casos de rotación que cumplen con las condiciones de ser menores de 33 años y tenes menos de 10 años de experiencia, asi mismo es posible apreciar que existe dispersión hacia otros perfiles (combinaciones de edad y experiencia) sin embargo su dispersión es mucho mayor y su concentración tambien; otro punto interesante del diagrama de dispersión propuesto se refleja en los pares ordenados (Edad,1) es decir aquellas edades relacionadas a 1 año de experiencia laboral, en este grupo puede apreciarse una aglomeración de puntos azulados lo cual es muestra de que hay una alta concentración de rotaciónm, en tal segmento es posible apreciar que quienes rotan y tienen 1 año de experiencia tienen como máximo 35 años.  
+
+
+La relación de edad y experiencia permite reforzar varios de los puntos que se derivaron de los histogramas y diagramas de caja propuestos con anterioridad. 
 
 
 
@@ -219,12 +240,7 @@ ggplot(datos_grupo,aes(x=Distancia_Casa))+geom_histogram()+facet_grid(~Rotación
 
 ```
 
-
-De acuerdo a los resultados se puede apreciar que el rango de edades entre 26 y 35 años es donde se presenta mayor rotación, también podemos ver que hay un nivel de rotación muy alto en personas con al menos 1 año de experiencia, esto respalda la hipótesis de que son las personas jóvenes con menos experiencia las que más rotan, por último la variable de distancia de la vivienda nos muestra que vivir lejos no es motivo para que se presente mayor rotación. 
-
-
-
-
+La revisión de las variables Rotación y Distancia_Cas muestran una leve diferencia en las medianas en donde la mediana de los trabajadores que rotan es mayor a la de aquellos que no lo hacen, sin embargo esta diferencia no es muy amplia y tampoco muestra una variación ampliamente significativa respecto a la distribución principal, esto es claramente visible en los histogramas en donde en cierta medida el histograma de los trabajadores que rotan se asemeja a una versión reducida del histograma principal por lo tanto este no es un factor que genere gran diferenciación, en promedio los trabajadores que rotan estan más o menos dos kilometros más lejos que aquellos que no lo hacen no obstante esta diferencia resulta un tanto trivial teniendo en cuenta que en ambas distribuciones la mayoria de individuos esta a una distancia menor o igual a 10 kilometros como bien se puede apreciar en los histogramas. 
 
 
 
@@ -232,7 +248,7 @@ De acuerdo a los resultados se puede apreciar que el rango de edades entre 26 y 
 
 ### 3.1 Análisis Univarido
 
-```{r include=FALSE}
+```{r echo=FALSE}
 rotacion_freq<-datos_grupo %>%
     group_by(Rotación) %>%
     summarise(FrecAbs=n())
@@ -293,7 +309,7 @@ ggarrange(rotacion_freq.t,horasext_freq.t,satisfamb_freq.t,ncol=1,nrow=3,align =
 
 
 
-```{r}
+```{r echo=FALSE}
 
 ggarrange(Cargo_freq.t,ncol=1,nrow=1)
 
@@ -344,9 +360,23 @@ ggarrange(bart_rot,bart_horasext,bart_satisfamb,bart_cargo,ncol=2,nrow=2)
 ```
 
 
+La revisión de las variables cualitativas permite apreciar los siguentes rasgos relevantes:
+
+- Respecto al total de trabajadores presentados en la base de datos solo el 16,12% presentaron rotación. 
+
+- Del total de trabajadores un 71,7% no trabaja horas extra y un 28,29% si lo hace. 
+
+- Asumiendo que la satisfacción ambiental es una variable cualitativa ordinal y que el valor más bajo (1) representa baja satisfacción y el valor máximo (4) representa alta satisfacción es posible establecer que el 19,31% estan poco satisfechos con el ambiente organizacional lo cual puede significar una razón para rotar.  
+
+- En lo que respecta a la distribución de cargos es posible apreciar que los cargos con mayores recursos humanos asignados son ejecutivo de ventas, investigador cientifico y tecnico de laboratorio, estos tres cargos representan casi el 60% de los recursos humanos disponibles, Adicionalmente los cargos de gestión o de linea directiva (gerentes y directores) representan el 22,1% de los recursos humanos disponibles.  
+
+
 ### 3.2 Análisis bivarido
 
-```{r include=FALSE}
+Para el abordaje de este análisis bivariado se hará uso de digagrams de barra apilados en su vertiente absoluta y relativa con el fin de conocer la incidencia total y de grupo de la rotación y de esta manera detectar o demarcar rasgos que muestran mayor asociación al fenomeno de la rotación.  
+
+
+```{r echo=TRUE}
 
 agrup1_herot<- datos_grupo %>% 
     group_by(Horas_Extra,Rotación) %>%
@@ -394,19 +424,10 @@ barplot_rotcargo_rel<- ggplot(agrup3_cargo,aes(fill=Rotación,y=FrecAbs,x=Cargo)
     geom_bar(position="fill",stat="identity") +coord_flip()
 
 
-
-```
-
-
-
-
-```{r}
-
 ggarrange(barplot_rothe,barplot_rothe_rel,ncol=2,nrow=1)
 
+
 ```
-
-
 
 
 
@@ -418,19 +439,19 @@ ggarrange(barplot_rotsatisf,barplot_rotsatisf_rel,ncol=2,nrow=1)
 
 
 
-
-
-
 ```{r}
 
 ggarrange(barplot_rotcargo,barplot_rotcargo_rel,ncol=2,nrow=1)
 
 ```
 
+Las gráficas anteriormente presentadas permiten evidenciar lo siguiente respecto las relaciones entre rotación y las variables cualitativas:  
 
+- En términos relativos la incidencia de la rotación en los trabajadores que no llevan a cabo horas extra esta por debajo del 12%, mientras que en los trabajadores que laboran horas extra esta incidencia supera el 25%, esta representatividad relativa refleja una posible relación entre las horas extra y la rotación.
 
+- En lo que respecta a satisfacción ambiental es posible identificar que las frecuencias absolutas de aquellos trabajadores que rotan se reparten de manera similar entre los grupos de calificación 1,3 y 4, no obstante en términos relativos es posible apreciar que el mayor peso relativo (cercano al 25%) se concentra en aquellos trabajadores que presentan una baja satisfacción con el ambiente organizacional (calificación 1).  
 
-
+- Finalmente en lo que respecta a cargos es posible apreciar que los cargos con menos rotación son los cargos de dirección (gerentes, directores de investigación y director de manufactura), y lo cargos con mayor incidencia en terminos absolutos son cargos con perfil operativo como los técnicos de laboratorio, representantes de ventas, investigadores y ejecutivos de ventas; complementariamente los cargos con mayor incidencia relativa son los representantes de ventas. , técnicos de laboratorio y recursos humanos.  
 
 
 ## 4.Conclusiones

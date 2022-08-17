@@ -162,7 +162,7 @@ summary_1
 boxplot(datos_grupo$Edad~datos_grupo$Rotación,col="red")
 ggplot(datos_grupo,aes(x=Edad))+geom_histogram()+facet_grid(~Rotación)+theme_bw()
 ```
-
+La revisión de la rotación respecto a la edad permite apreciar que las personas que rotan tienen en promedio una edad menor que las personas que no lo hacen, la revisión de los diagramas de caja y de los histrogramas permite apreciar que el 50% de los individuos que rotan tienen como máximo 32 años, es decir, 4 años menos que la mediana de aquellos que no lo hacen,  esta realidad demarca por supuesto tambien una distancia en los promedio que presentan aproximadamente 4 años de diferencia. Esta comparación entre categorias de la variable cuantitativa permite apreciar que si se presentan diferencias de edad entre los individuos que deciden rotar y quienes no lo hacen, en general se esperaria que los menores de 36 años presenten una mayor propensión a rotar.  
 
 
 #### Años Experiencia vs Rotación
@@ -186,6 +186,9 @@ boxplot(datos$Años_Experiencia~datos$Rotación,col="red")
 ggplot(datos_grupo,aes(x=Años_Experiencia))+geom_histogram()+facet_grid(~Rotación)+theme_bw()
 
 ```
+
+Para el caso del contraste entre los años de experiencia y la rotación es posible notar una diferencia mucho más notable en las distribuciones que se evidencia claramente en el diagrama de caja y en los histogramas y que se aclara mucho más con los estadísticos básicos que muestran que el percentil 75 es de 10 años, por lo tanto el 75% de los individuos que rotan tienen como máximo 10 años de experiencia lo cual es coherente con la distribución del histograma de aquellos que rotan en donde se observa con claridad que la mayor concentración se encuentran entre 0 y 10 años de experiencia, el 25% restante de la distribución corresponde a individuos con más de 10 años de experiencia que rotan (caso menos frecuente).El análisis de este par de variables permite dilucidar que los individuos con 10 o menos años de experiencia tienen más propensión a rotar que aquellos que tienen una experiencia superior.  
+
 
 
 #### Distancia_Casa vs Rotación

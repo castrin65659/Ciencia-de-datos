@@ -1,7 +1,7 @@
 ---
 title: "Actividad 1-Análisis exploratorio rotación de personal"
 author: "Camilo Castro - David Alejandro Rivera Correa"
-date: "2022-08-02"
+date: "2022-08-17"
 output:
   html_document: default
   pdf_document: default
@@ -58,16 +58,16 @@ Rotación
 
 Cuantitativas: 
 
-Edad
-Distancia_Casa
-Años_Experiencia
+- Edad
+- Distancia_Casa
+- Años_Experiencia
 
 
 Cualitativas:
 
-Satisfacción_Ambiental
-Cargo
-Horas_Extra
+- Satisfacción_Ambiental
+- Cargo
+- Horas_Extra
 
 Para dar inicio al análisis se genera un set de datos depurado con las variables a analizar:
 
@@ -205,7 +205,7 @@ ggplot(datos_grupo,aes(x=Edad,y=Años_Experiencia,color=Rotación))+
 ```
 
 
-El gráfico de dispersión permit apreciar que hay una aglomeración relevante de casos de rotación que cumplen con las condiciones de ser menores de 33 años y tenes menos de 10 años de experiencia, asi mismo es posible apreciar que existe dispersión hacia otros perfiles (combinaciones de edad y experiencia) sin embargo su dispersión es mucho mayor y su concentración tambien; otro punto interesante del diagrama de dispersión propuesto se refleja en los pares ordenados (Edad,1) es decir aquellas edades relacionadas a 1 año de experiencia laboral, en este grupo puede apreciarse una aglomeración de puntos azulados lo cual es muestra de que hay una alta concentración de rotaciónm, en tal segmento es posible apreciar que quienes rotan y tienen 1 año de experiencia tienen como máximo 35 años.  
+El gráfico de dispersión permit apreciar que hay una aglomeración relevante de casos de rotación que cumplen con las condiciones de ser menores de 33 años y tener menos de 10 años de experiencia, asi mismo es posible apreciar que existe dispersión hacia otros perfiles (combinaciones de edad y experiencia) sin embargo su dispersión es mucho mayor y su concentración tambien; otro punto interesante del diagrama de dispersión propuesto se refleja en los pares ordenados (Edad,1) es decir aquellas edades relacionadas a 1 año de experiencia laboral, en este grupo puede apreciarse una aglomeración de puntos azulados lo cual es muestra de que hay una alta concentración de rotaciónm, en tal segmento es posible apreciar que quienes rotan y tienen 1 año de experiencia tienen como máximo 35 años.  
 
 
 La relación de edad y experiencia permite reforzar varios de los puntos que se derivaron de los histogramas y diagramas de caja propuestos con anterioridad. 
@@ -454,14 +454,32 @@ Las gráficas anteriormente presentadas permiten evidenciar lo siguiente respect
 - Finalmente en lo que respecta a cargos es posible apreciar que los cargos con menos rotación son los cargos de dirección (gerentes, directores de investigación y director de manufactura), y lo cargos con mayor incidencia en terminos absolutos son cargos con perfil operativo como los técnicos de laboratorio, representantes de ventas, investigadores y ejecutivos de ventas; complementariamente los cargos con mayor incidencia relativa son los representantes de ventas. , técnicos de laboratorio y recursos humanos.  
 
 
+
 ## 4.Conclusiones
 
--	Podemos afirmar que las personas jóvenes con poca experiencia laboral generarán mayor rotación, se recomienda contratar a personas con más de 11 años de experiencia.
+El análisis exploratorio realizado ha permitido dilucidar algunos rasgos de los trabajadores que rotan, y asi mismo ha permitido validar el arquetipo inicial planteado que establecia:
 
--	Se recomienda no prestar atención a la variable distancia de la vivienda ya que no resulta ser trascendental en la rotación.
+"se esperaria que una edad menor, una experiencia media y distancias mayores del lugar de trabajo se relacionen a mayor rotación en especial si el individuo esta en puestos operativos y no esta satisfecho con el clima organizacional y tiene carga laboral extra"
 
+Este análisis ha permitido detallar más esta caracterización evidenciando lo siguiente de acuerdo a las proporciones y caracteristicas de las variables cuantitativas y cualitativas:
 
--	Mediante un análisis bivariado es posible cruzar variables que aparecen relacionadas dentro de la misma muestra, de esta forma se encuentran respuestas a hipótesis planteadas inicialmente.
+- Los empleados con edades menores a 36 años muestran mayor propensión a rotar, esto se refuerza con medianas divergentes respecto al grupo que no rota, se recomienda realizar prueba t para validar la significancia estadistica de la diferencia de edad. 
+
+- Los empleados con menos de 10 años de experiencia son más propensos a rotar, especialmente aquellos que cuentan con solo un año de experiencia.
+
+- A pesar de que la distancia promedio de los empleados que rotan es un poco mayor a la de los empleados que no lo hacen, la diferencia en las distribuciones no da muestras fuertes de agrupación o segmentación, por lo tanto esta revisión inicial no da señales suficientes para demarcar la distancia de casa como un factor determinante. 
+
+- Los trabajadores que tienen una percepción negativa del ambiente organizacional, laboran horas extras y se encuentran en cargos de tipo operativo tienen una mayor propensión a rotar.  
+
+A partir de lo anterior se recomendaria realizar pruebas t y chi-cuadrado para validar con mayor fuerza las diferencias entre los trabajadores que rotan y los que no lo hacen, adicionalmente dada la naturaleza dicotómica de la variables de interés seria conveniente emplear una regresión logística para conocer en mayor profundidad el aporte de las variables a la probabilidad de rotar.  
+
+Finalmente, a partir de los hallazgos se recomienda considerar las siguientes estrategias para reducir la rotación:
+
+- Disminuir la contratación de personas con un año de experiencia, puesto que generan la mayor rotación, al ser estas personas las que ocupan los cargos de menor rango sería preferible contratarlas a partir de dos años de experiencia, esto no garantiza que desaparezca la rotación pero si la reduciría, por otra parte, teniendo en cuenta que el rango de edades donde más se genera deserción es entre 26 y 35 años se propone que en los cargos propios de estas edades se establezca un sistema de bonos por logro de metas para incentivar a estos trabajadores en específico y monitorear el comportamiento de deserción un año después para ver si se logró una reducción.
+
+- Se recomienda ahondar en procesos de encuestas de clima organizacional haciendo énfasis en el contexto de los cargos operativos con el fin de conocer más en detalle los factores o situaciones que desmejoran la percepción del mismo, a partir de los resultados de estos procesos se recomienda direccionar procesos de diseño de planes de mejora en las diferentes áreas que tengan como foco mejorar el relacionamiento y las dinámicas de equipo.  
+
+- Se recomienda hacer una revisión de estructura de cargos con el fin de determinar la rigidez de la estructura organizacional, el ideal de este proceso es replantear o generar cambios en la misma de tal forma que los trabajadores tengan mayores posibilidades de ascenso y  mejoras salariales y tengan por ende menores incentivos a rotar.  
 
      
 
